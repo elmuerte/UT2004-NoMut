@@ -4,7 +4,6 @@ d:\dev\ut2004\ut2-code
 name=NoMut
 System\NoMut.ucl
 System\NoMut.u
-Help\NoMut.html
 [Requirement]
 product=UT2004
 version=3186
