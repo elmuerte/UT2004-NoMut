@@ -1,0 +1,26 @@
+d:\dev\ut2004\ut2-code
+0.8
+[Group]
+name=NoMut
+System\NoMut.ucl
+System\NoMut.u
+Help\NoMut.html
+[Requirement]
+product=UT2004
+version=3186
+developer=Epic Games, Inc.
+productURL=http://www.unrealtournament2004.com/
+versionURL=http://unreal.epicgames.com/
+developerURL=http://www.epicgames.com/
+[Product]
+product=NoMut
+version=100
+developer=Michiel "El Muerte" Hendriks
+productURL=http://ut2004.elmuerte.com/NoMut
+versionURL=http://ut2004.elmuerte.com/NoMut
+developerURL=http://ut2004.elmuerte.com
+readme=Help\NoMut.html
+title=NoMut Setup
+cleanup=True
+logo=Help\NoMut.bmp
+archive=NoMut.ut4mod

@@ -133,20 +133,26 @@ The configuration of this mutator goes into the system configuration file (<code
 <pre>
 [NoMut.mutNoMut]
 bLog=false
+No=(ClassName="<i>Package.Class</i>",bRecurse=false,bSafeCheck=false,Exempt=("<i>Package.Class</i>","<i>Package.Class</i>"))
+No=(ClassName="<i>Package.Class</i>",bRecurse=false,bSafeCheck=false)
 No=(ClassName="<i>Package.Class</i>",bRecurse=false)
-No=(ClassName="<i>Package.Class</i>",bRecurse=false)
+No=(ClassName="<i>Package.Class</i>")
 ...
 </pre>
 <dl>
 	<dt>bLog</dt>
 	<dd>If set to true it will log the items removed from the game. This is a debug setting and is not recuired to be enabled.</dd>
 	<dt>No</dt>
-	<dd>This is a list with classes to be removed. Virtually you can ad as much entries as you want.
+	<dd>This is a list with classes to be removed. Virtually you can ad as much entries as you want. Only ClassName is required.
 	<dl>
 		<dt>ClassName</dt>
-		<dd>This is the fully qualified name of the class to be removed, for example the fully qualified name of Assault rifle is: <code>xWeapons.AssaultRiflePickup</code>. If the ClassName is invalid it will be reported in the log.<br />at the bottom of this page is a small list with fully qualified names of some game elements.</dd>
+		<dd>This is the fully qualified name of the class to be removed, for example the fully qualified name of Assault rifle is: <code>xWeapons.AssaultRiflePickup</code>. If the ClassName is invalid it will be reported in the log.<br />You can use tools like <a href="http://uncodex.elmuerte.com">UnCodeX</a>, or it's <a href="http://unreal.student.utwente.nl/uncodex-ut2004/">output</a> to find the full class names.</dd>
 		<dt>bRecurse</dt>
-		<dd>If this is set to true all subclasses of the specified classname will also be removed from this game. For example if the ClassName is <code>Engine.Vehicle</code> it will remove all vehicles from the game.</dd>
+		<dd>If this is set to true all subclasses of the specified classname will also be removed from this game. For example if the ClassName is <code>Engine.Vehicle</code> it will remove all vehicles from the game. False by default</dd>
+		<dt>bSafeCheck</dt>
+		<dd>Only remove actors if it's not vital for the game. The checks performed are listed below. Defaults to false.</dd>
+		<dt>Exempt</dt>
+		<dd>Exempt these classes from being replaced. This is only used when <code>bRecurse=true</code>. These subclasses will be left alone, this is also recursive.</dd>
 	</dl>
 	</dd>
 </dl>
@@ -166,8 +172,10 @@ The configuration is pretty much identical to the on of NoMut. The <code>No=</co
 bLog=false
 bAutoCreateConfig=false
 ConfigClassName=NoMut.NoMutConfig
+No=(ClassName="<i>Package.Class</i>",bRecurse=false,bSafeCheck=false,Exempt=("<i>Package.Class</i>","<i>Package.Class</i>"))
+No=(ClassName="<i>Package.Class</i>",bRecurse=false,bSafeCheck=false)
 No=(ClassName="<i>Package.Class</i>",bRecurse=false)
-No=(ClassName="<i>Package.Class</i>",bRecurse=false)
+No=(ClassName="<i>Package.Class</i>")
 ...
 </pre>
 <dl>
@@ -181,8 +189,10 @@ No=(ClassName="<i>Package.Class</i>",bRecurse=false)
 Each map will have it's own section in the configuration file (depends on the <code>ConfigClassName</code>). Each section will look like this:
 <pre>
 [<i>MapName</i> <i>ConfigClass</i>]
+No=(ClassName="<i>Package.Class</i>",bRecurse=false,bSafeCheck=false,Exempt=("<i>Package.Class</i>","<i>Package.Class</i>"))
+No=(ClassName="<i>Package.Class</i>",bRecurse=false,bSafeCheck=false)
 No=(ClassName="<i>Package.Class</i>",bRecurse=false)
-No=(ClassName="<i>Package.Class</i>",bRecurse=false)
+No=(ClassName="<i>Package.Class</i>")
 ...
 </pre>
 
@@ -200,7 +210,7 @@ No=(ClassName="<i>Package.Class</i>",bRecurse=false)
 	<dt>NoMut.NoMutConfig</dt>
 	<dd>This is the default configuration class, it will store the per map configuration in the system configuration file (<code>UT2004.ini</code>). The <i>ConfigClass</i> name to use in the map configuration section is: <code>NoMutConfig</code></dd>
 	<dt>NoMut.NoMutConfigGlobal</dt>
-	<dd>This will store the configuration per map in a global configuration file <code>NoMut.ini</code>, this is usefull to share the complete configuration between servers. The <i>ConfigClass</i> name to use in the map configuration section is: <code>NoMutConfigGlobal</code></dd>
+	<dd>This will store the configuration per map in a global configuration file <code>NoMutConfig.ini</code>, this is usefull to share the complete configuration between servers. The <i>ConfigClass</i> name to use in the map configuration section is: <code>NoMutConfigGlobal</code></dd>
 	<dt>NoMut.NoMutConfigMap</dt>
 	<dd>This will store the configuration in a seperate file for each map: <code><i>MapName</i>.ini</code>. The <i>ConfigClass</i> name to use in the map configuration section is: <code>NoMutConfigMap</code></dd>
 </dl>
@@ -223,7 +233,9 @@ The configuration of this mutator goes into the system configuration file (<code
 <pre>
 [NoMut.mutReMut]
 bLog=false
-Re=(From="<i>Package.Class</i>",To="<i>Package.Class</i>")
+Re=(From="<i>Package.Class</i>",To="<i>Package.Class</i>",bRecurse=false,bSafeCheck=false,Exempt=("<i>Package.Class</i>","<i>Package.Class</i>"))
+Re=(From="<i>Package.Class</i>",To="<i>Package.Class</i>",bRecurse=false,bSafeCheck=false)
+Re=(From="<i>Package.Class</i>",To="<i>Package.Class</i>",bRecurse=false)
 Re=(From="<i>Package.Class</i>",To="<i>Package.Class</i>")
 ...
 </pre>
@@ -231,10 +243,41 @@ Re=(From="<i>Package.Class</i>",To="<i>Package.Class</i>")
 	<dt>bLog</dt>
 	<dd>If set to true it will log the items removed from the game. This is a debug setting and is not recuired to be enabled.</dd>
 	<dt>Re</dt>
-	<dd>This is a list with classes to be removed. Virtually you can ad as much entries as you want.
+	<dd>This is a list with classes to be removed. Virtually you can ad as much entries as you want. Only From and To are required.
 	<dl>
 		<dt>From, To</dt>
 		<dd>This is the fully qualified name of the class to be removed, for example the fully qualified name of Assault rifle is: <code>xWeapons.AssaultRiflePickup</code>. If the ClassName is invalid it will be reported in the log.<br />at the bottom of this page is a small list with fully qualified names of some game elements.</dd>
+		<dt>bRecurse</dt>
+		<dd>If this is set to true all subclasses of the specified From class will also be replaced. For example if From is <code>Engine.Vehicle</code> it will replace all vehicles. False by default</dd>
+		<dt>bSafeCheck</dt>
+		<dd>Only remove actors if it's not vital for the game. The checks performed are listed below. Defaults to false.</dd>
+		<dt>Exempt</dt>
+		<dd>Exempt these classes from being replaced. This is only used when <code>bRecurse=true</code>. These subclasses will be left alone, this is also recursive.</dd>
 	</dl>
 	</dd>
+</dl>
+
+<a name="mutReMutPerMap"></a>
+<h2>ReMut per Map</h2>
+This mutator is just like the <a href="#mutNoMutPerMap">NoMut per Map mutator</a> a per map configuration of ReMut. <br />
+The mutator works the same as the NoMut version, the only difference is the class names used for the ConfigClassName variable. <br />
+<table>
+</tr>
+	<th>NoMut per Map class</th><th>ReMut per Map class</th>
+</tr>
+<tr><td><code>NoMut.NoMutConfig</code></td><td><code>NoMut.ReMutConfig</code></td></tr>
+<tr><td><code>NoMut.NoMutConfigGlobal</code></td><td><code>NoMut.ReMutConfigGlobal</code></td></tr>
+<tr><td><code>NoMut.NoMutConfigMap</code></td><td><code>NoMut.ReMutConfigMap</code></td></tr>
+</table>
+
+<h2>Appendix</h2>
+<h3>Safe Check</h3>
+The following checks are performed to check if a actor is safe to be replaced\removed.
+<dl>
+	<dt>Vehicle classes</dt>
+	<dd><code>bKeyVehicle</code> variable is set to false. By default only the <code>ONSMobileAssaultStation</code> and <code>ONSHoverTank_IonPlasma</code> have these set.</dd>
+	<dt>Weapon classes</dt>
+	<dd><code>bCanThrow</code> variable is set to true. Weapons you can not throw are usualy important for the game (like the ball launcher)</dd>
+	<dt>Controller classes</dt>
+	<dd>In case of Team Games the result of the function <code>CriticalPlayer</code> defines the safe state. This is game type depended, usualy you don't replace\remove controller classes</dd>
 </dl>

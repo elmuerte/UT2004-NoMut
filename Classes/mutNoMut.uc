@@ -4,7 +4,7 @@
 
 	Creation date: 06/08/2004 16:53
 	Copyright (c) 2004, Michiel "El Muerte" Hendriks
-	<!-- $Id: mutNoMut.uc,v 1.3 2004/08/08 09:33:00 elmuerte Exp $ -->
+	<!-- $Id: mutNoMut.uc,v 1.4 2004/08/09 20:44:44 elmuerte Exp $ -->
 *******************************************************************************/
 
 class mutNoMut extends Mutator config;
@@ -15,6 +15,7 @@ struct NoStruct
 	var class<Actor> ClassType;
 	var bool bRecurse;
 	var bool bSafeCheck;
+	var array< class<Actor> > Exempt;
 };
 var array<NoStruct> NoC;
 
@@ -27,6 +28,8 @@ struct NoConfigStruct
 	var bool bRecurse;
 	/** check if the class is safe to replace, e.g. not required for the game */
 	var bool bSafeCheck;
+	/** if bRecurse exempt these classes (recursively) from being deleted */
+	var array<string> Exempt;
 };
 /** configuration array, to reset the configuration to an empty list simply use "No=" */
 var config array<NoConfigStruct> No;
@@ -36,8 +39,8 @@ var globalconfig bool bLog;
 
 event PreBeginPlay()
 {
-	local int i;
-	local class<Actor> A;
+	local int i, j;
+	local class<Actor> A, Ax;
 
 	super.PreBeginPlay();
 	for (i = 0; i < No.length; i++)
@@ -59,6 +62,19 @@ event PreBeginPlay()
 				NoC[NoC.length-1].ClassType = A;
 				NoC[NoC.length-1].bRecurse = No[i].bRecurse;
 				NoC[NoC.length-1].bSafeCheck = No[i].bSafeCheck;
+				// process exempt
+				if (No[i].bRecurse && No[i].Exempt.length > 0)
+				{
+					for (j = 0; j < No[i].Exempt.length; j++)
+					{
+						Ax = class<Actor>(DynamicLoadObject(No[i].Exempt[j], class'Class', true));
+						if (Ax != none )
+						{
+							NoC[NoC.length-1].Exempt.length = NoC[NoC.length-1].Exempt.length-1;
+							NoC[NoC.length-1].Exempt[NoC[NoC.length-1].Exempt.length-1] = Ax;
+						}
+					}
+				}
 			}
 		}
 		else {
@@ -69,11 +85,25 @@ event PreBeginPlay()
 
 function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 {
-	local int i;
+	local int i, j;
 	local bool bRemove;
 	for (i = 0; i < NoC.length; i++)
 	{
-		if (NoC[i].bRecurse) bRemove = Other.IsA(NoC[i].ClassType.name);
+		if (NoC[i].bRecurse)
+		{
+			bRemove = Other.IsA(NoC[i].ClassType.name);
+			if (bRemove)
+			{
+				for (j = 0; j < NoC[i].Exempt.length; j++)
+				{
+					if (Other.IsA(NoC[i].Exempt[j].name))
+					{
+						bRemove = false;
+						break;
+					}
+				}
+			}
+		}
 		else bRemove = (Other.Class == NoC[i].ClassType);
 		if (bRemove && (!NoC[i].bSafeCheck || IsSafe(Level, Other)))
 		{
@@ -96,6 +126,9 @@ static function bool IsSafe(LevelInfo Level, Actor Other)
 	return true;
 }
 
+/**
+	Append details on the actors removed
+*/
 function GetServerDetails( out GameInfo.ServerResponseLine ServerState )
 {
 	local int i;
@@ -104,6 +137,7 @@ function GetServerDetails( out GameInfo.ServerResponseLine ServerState )
 	for (i = 0; i < NoC.length; i++)
 	{
 		if (s != "") s $= ", ";
+		if (NoC[i].Exempt.Length > 0) s $= "~";
 		if (NoC[i].bRecurse) s $= "!";
 		s $= NoC[i].ClassType.name;
 	}
