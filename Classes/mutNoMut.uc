@@ -4,7 +4,7 @@
 
 	Creation date: 06/08/2004 16:53
 	Copyright (c) 2004, Michiel "El Muerte" Hendriks
-	<!-- $Id: mutNoMut.uc,v 1.5 2004/08/12 09:37:59 elmuerte Exp $ -->
+	<!-- $Id: mutNoMut.uc,v 1.6 2004/08/12 09:41:15 elmuerte Exp $ -->
 *******************************************************************************/
 
 class mutNoMut extends Mutator config;
@@ -64,6 +64,7 @@ event PreBeginPlay()
 		A = class<Actor>(DynamicLoadObject(No[i].ClassName, class'Class', true));
 		if (A != none)
 		{
+			/*
 			if (A.default.bNoDelete && !No[i].bRecurse)
 			{
 				log(No[i].ClassName@"can never be removed from the game (bNoDelete = true)", name);
@@ -73,6 +74,7 @@ event PreBeginPlay()
 				log(No[i].ClassName@"can never be removed from the game (bStatic = true)", name);
 			}
 			else {
+			*/
 				if (SIsA(A, class'Pickup')) cntPickup++;
 				if (SIsA(A, class'Vehicle')) cntVehicle++;
 				if (SIsA(A, class'Weapon')) cntWeapon++;
@@ -95,7 +97,9 @@ event PreBeginPlay()
 						}
 					}
 				}
+			/*
 			}
+			*/
 		}
 		else {
 			log(No[i].ClassName@"could not be loaded, invalid class", name);
@@ -304,8 +308,6 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 		return true;
 	}
 
-	if (Other.bNoDelete || Other.bStatic) return true; // can't delete these
-
 	for (i = 0; i < NoC.length; i++)
 	{
 		if (NoC[i].bRecurse)
@@ -326,9 +328,16 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 		else bRemove = (Other.Class == NoC[i].ClassType);
 		if (bRemove && (!NoC[i].bSafeCheck || IsSafe(Level, Other)))
 		{
-			if (bLog) log("Removed"@Other.Class@"@"@Other.Location, name);
-			bSuperRelevant = 1;
-			return false;
+			if (Other.bNoDelete || Other.bStatic)
+			{
+				if (bLog) log("Hiding"@Other.Class@"@"@Other.Location, name);
+				Other.bHidden = true;
+			}
+			else {
+				if (bLog) log("Removed"@Other.Class@"@"@Other.Location, name);
+				bSuperRelevant = 1;
+				return false;
+			}
 		}
 	}
 	return true;
