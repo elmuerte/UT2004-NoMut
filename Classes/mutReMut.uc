@@ -4,7 +4,7 @@
 
 	Creation date: 06/08/2004 16:53
 	Copyright (c) 2004, Michiel "El Muerte" Hendriks
-	<!-- $Id: mutReMut.uc,v 1.3 2004/08/09 20:44:44 elmuerte Exp $ -->
+	<!-- $Id: mutReMut.uc,v 1.4 2004/08/12 09:37:59 elmuerte Exp $ -->
 *******************************************************************************/
 
 class mutReMut extends Mutator config;
@@ -37,7 +37,7 @@ var() config bool bLog;
 
 event PreBeginPlay()
 {
-	local int i, j;
+	local int i, j, n;
 	local class<Actor> A, B, Ax;
 
 	super.PreBeginPlay();
@@ -59,10 +59,11 @@ event PreBeginPlay()
 				log(ReC[i].From@"can never be removed from the game (bStatic = true)", name);
 			}
 			else {
-				ReC.length = ReC.length+1;
-				ReC[ReC.length-1].From = A;
-				ReC[ReC.length-1].To = B;
-				ReC[ReC.length-1].bSafeCheck = Re[i].bSafeCheck;
+				n = ReC.length;
+				ReC.length = n+1;
+				ReC[n].From = A;
+				ReC[n].To = B;
+				ReC[n].bSafeCheck = Re[i].bSafeCheck;
 				// process exempt
 				if (Re[i].bRecurse && Re[i].Exempt.length > 0)
 				{
@@ -71,8 +72,7 @@ event PreBeginPlay()
 						Ax = class<Actor>(DynamicLoadObject(Re[i].Exempt[j], class'Class', true));
 						if (Ax != none )
 						{
-							ReC[ReC.length-1].Exempt.length = ReC[ReC.length-1].Exempt.length-1;
-							ReC[ReC.length-1].Exempt[ReC[ReC.length-1].Exempt.length-1] = Ax;
+							ReC[n].Exempt[ReC[n].Exempt.length] = Ax;
 						}
 					}
 				}
