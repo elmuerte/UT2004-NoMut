@@ -1,0 +1,240 @@
+<h1>NoMut</h1>
+<p>
+The NoMut contains a couple of mutators that will allow you to alter the content of levels as you see fit. <br />
+You will be able to either remove items completely or to replace one item with the other.<br />
+<b>Note:</b> changing content of levels has an impact on the game play. Thus using these mutators won't make your server show up as a <i>standard server</i><br />
+</p>
+<p>
+This package contains the following mutators:
+<ul>
+	<li><a href="#mutNoMut">NoMut</a><br />
+	Removes items from a level.
+	<ul>
+		<li><a href="#mutNoMutPerMap">NoMut per Map</a><br />Per map configuration</li>
+	</ul>
+	</li>
+	<li><a href="#mutReMut">ReMut</a><br />
+	Replaces items in a level.
+	<ul>
+		<li><a href="#mutReMutPerMap">ReMut per Map</a><br />Per map configuration</li>
+	</ul>
+	</li>
+</ul>
+</p>
+
+<h2>Downloads</h2>
+New versions of this package can be downloaded from the <a href="http://ut2004.elmuerte.com/NoMut">NoMut website</a>.
+<ul>
+	<li>Version 100 <a href="/files/NoMut-v100.zip">[zip]</a> <a href="/files/NoMut-v100-ut4mod.zip">[ut4mod]</a></li>
+</ul>
+
+
+<h2>License</h2>
+<pre>
+<a href="http://wiki.beyondunreal.com/wiki/OpenUnrealModLicense">Open Unreal Mod License</a>
+Version 1, March 2004
+
+0. Definitions
+"Program"       the work, either in binary or source form, that has a notice
+                attached to it stating that it has been released under this
+                license it by the copyright holder.
+"Modification"  a derivate of the Program or any other work based on the Program
+"Linking"       using parts of the Program, or using parts of any other work,
+                thus creating a direct dependency
+"You"           the licensee
+"Runtime Environment"
+                the virtual machine or operating system required to run the
+                Program, as released by the Publisher or Creator of said
+                runtime environment. This includes any extentions or updates
+                for the runtime environment released by the Publisher or
+                Creator.
+
+1. License
+Herewith everybody is granted permission to copy and distribute verbatim copies
+of this document. The only restriction lies on changing the content, with the
+exception to translation of this license.
+
+This license applies to the Program that has been released under this license.
+The license only applies to copying, distribution and modification of the
+Program. Execution or output of the Program are not covered by this license,
+however the right for additional limitations on the use (that do not cover
+copying, distribution or modification) is granted to the copyright holder.
+This license is only valid when all terms in this license comply with the
+licenses of the dependecies of the Program. This includes the license of the
+possible required runtime environment.
+
+2. Copying and distribution
+You are granted to copy or distribute verbatim copies of the Program, on any
+medium, or in any format as you see fit. You are not limited to charging a fee
+for the physical act of transferring the copy, nor are you limited to provide
+warranty for the Program in return of a fee. Unless this is prohibited by the
+license of the Runtime Environment.
+
+Any distribution of the program should be accompanied with a verbatim copy of
+this license.
+
+3. Modification
+You are allowed to modify the Program, or portions of it, therefore making it a
+derivate of the Program. You are allowed to distribute your modifications under
+the following conditions:
+        - You must clearly state that it is a modification or derivate of the
+          Program
+        - The original copyright notice must be kept intact
+        - The modified files must contain notices of the changed made to it
+        - The Modification must be released under the same license as the Program
+        - Distribution happens in compliance with section 2
+
+4. Source
+The original source of the Program or Modification must be freely available on
+request.
+
+5. Linking
+The Program or Modification may only link with other work that have been
+released as free software.
+
+The license grants exclusive right to link with any part of the Runtime
+Environment, as provided by the publisher or creator of said Runtime
+Environment.
+Reusing pieces of source code available in the runtime environment in the
+Program is only allowed under the following terms:
+        - the "borrowed" code is clearly marked to originate from the runtime
+          environment, quoting the original copyright.
+        - the following notice is added to the top of the file:
+          "This file contains portions of code from the runtime environment."
+
+The right to "port" the Program to another runtime environment is reserved for
+the copyright holder.
+
+6. NON WARRANTY
+THIS SOFTWARE DOES NOT COME WITH A WARRANTY OF ANY KIND, UNLESS NOTED OTHERWISE
+BY THE COPYRIGHT HOLDER OR WARRANTY PROVIDER. THE ENTIRE RISK OF THE PERFORMANCE
+AND QUALITY OF THE PROGRAM LIES WITH YOU. SHOULD THE PROGRAM PROVE DEFECTIVE,
+YOU WILL ASSUME ALL COSTS FOR REQUIRED REPAIR OR CORRECTION.
+</pre>
+
+<!--
+<h2>Revision history</h2>
+-->
+
+<a name="mutNoMut"></a>
+<h2>NoMut</h2>
+This mutator can remove certain elements from the level. You can remove things like pickups, vehicles, pretty much everything. <br />
+<i>Technical:</i> every <code>Actor</code> with properties <code>bNoDelete=false</code> and <code>bStatic=false</code> can be removed from the game.
+
+<h3>Installation</h3>
+The mutator name is:<br />
+<code>NoMut.mutNoMut</code><br />
+You can install it as any other mutator. When installed and configured correctly it will add a new field to the server info list:<br />
+<code>NoMut Removes: ...</code><br />
+This contains a list actors that are removed from the game.
+
+<h3>Configuration</h3>
+The configuration of this mutator goes into the system configuration file (<code>UT2004.ini</code>):
+<pre>
+[NoMut.mutNoMut]
+bLog=false
+No=(ClassName="<i>Package.Class</i>",bRecurse=false)
+No=(ClassName="<i>Package.Class</i>",bRecurse=false)
+...
+</pre>
+<dl>
+	<dt>bLog</dt>
+	<dd>If set to true it will log the items removed from the game. This is a debug setting and is not recuired to be enabled.</dd>
+	<dt>No</dt>
+	<dd>This is a list with classes to be removed. Virtually you can ad as much entries as you want.
+	<dl>
+		<dt>ClassName</dt>
+		<dd>This is the fully qualified name of the class to be removed, for example the fully qualified name of Assault rifle is: <code>xWeapons.AssaultRiflePickup</code>. If the ClassName is invalid it will be reported in the log.<br />at the bottom of this page is a small list with fully qualified names of some game elements.</dd>
+		<dt>bRecurse</dt>
+		<dd>If this is set to true all subclasses of the specified classname will also be removed from this game. For example if the ClassName is <code>Engine.Vehicle</code> it will remove all vehicles from the game.</dd>
+	</dl>
+	</dd>
+</dl>
+
+<a name="mutNoMutPerMap"></a>
+<h2>NoMut per Map</h2>
+This mutator does the name as <a href="#mutNoMut">NoMut</a> but it has a per map configuration. This will allow you to use different rules for each map.
+
+<h3>Installation</h3>
+The mutator name is:<br />
+<code>NoMut.mutNoMutPerMap</code>
+
+<h3>Configuration</h3>
+The configuration is pretty much identical to the on of NoMut. The <code>No=</code> configuration is the default configuration if the current map doesn't have it's own configuration.
+<pre>
+[NoMut.mutNoMutPerMap]
+bLog=false
+bAutoCreateConfig=false
+ConfigClassName=NoMut.NoMutConfig
+No=(ClassName="<i>Package.Class</i>",bRecurse=false)
+No=(ClassName="<i>Package.Class</i>",bRecurse=false)
+...
+</pre>
+<dl>
+	<dt>bAutoCreateConfig</dt>
+	<dd>If set to true a configuration entry is created for the map if it didn't have one already.</dd>
+	<dt>ConfigClassName</dt>
+	<dd>This defines the configuration class used to store the per map configuration. See below for more info</dd>
+</dl>
+
+<h4>Per map configuration</h4>
+Each map will have it's own section in the configuration file (depends on the <code>ConfigClassName</code>). Each section will look like this:
+<pre>
+[<i>MapName</i> <i>ConfigClass</i>]
+No=(ClassName="<i>Package.Class</i>",bRecurse=false)
+No=(ClassName="<i>Package.Class</i>",bRecurse=false)
+...
+</pre>
+
+<dl>
+	<dt>MapName</dt>
+	<dd>This is the name of the map, it's just filename without the extention. It's not case sensitive.</dd>
+	<dt>ConfigClass</dt>
+	<dd>The name of the config class used, it's one of the following: <code>NoMutConfig</code>, <code>NoMutConfigGlobal</code>, <code>NoMutConfigMap</code></dd>
+	<dt>No</dt>
+	<dd>This configuration is identical to the mutator configuration.</dd>
+</dl>
+
+<h5>Configuration classes</h5>
+<dl>
+	<dt>NoMut.NoMutConfig</dt>
+	<dd>This is the default configuration class, it will store the per map configuration in the system configuration file (<code>UT2004.ini</code>). The <i>ConfigClass</i> name to use in the map configuration section is: <code>NoMutConfig</code></dd>
+	<dt>NoMut.NoMutConfigGlobal</dt>
+	<dd>This will store the configuration per map in a global configuration file <code>NoMut.ini</code>, this is usefull to share the complete configuration between servers. The <i>ConfigClass</i> name to use in the map configuration section is: <code>NoMutConfigGlobal</code></dd>
+	<dt>NoMut.NoMutConfigMap</dt>
+	<dd>This will store the configuration in a seperate file for each map: <code><i>MapName</i>.ini</code>. The <i>ConfigClass</i> name to use in the map configuration section is: <code>NoMutConfigMap</code></dd>
+</dl>
+
+<a name="mutReMut"></a>
+<h2>ReMut</h2>
+This mutator can replace certain elements in the level. You can replace things pretty much anything for anything else, e.g. replace a vehicle for a weapon. 
+This mutator is pretty much identical to the Arena mutators, except this gives you a more advanced method to configure.<br />
+<i>Technical:</i> every <code>Actor</code> with properties <code>bNoDelete=false</code> and <code>bStatic=false</code> can be replaced.
+
+<h3>Installation</h3>
+The mutator name is:<br />
+<code>NoMut.mutReMut</code><br />
+You can install it as any other mutator. When installed and configured correctly it will add a new field to the server info list:<br />
+<code>ReMut Replaces: ...</code><br />
+This contains a list actors that are replaced.
+
+<h3>Configuration</h3>
+The configuration of this mutator goes into the system configuration file (<code>UT2004.ini</code>):
+<pre>
+[NoMut.mutReMut]
+bLog=false
+Re=(From="<i>Package.Class</i>",To="<i>Package.Class</i>")
+Re=(From="<i>Package.Class</i>",To="<i>Package.Class</i>")
+...
+</pre>
+<dl>
+	<dt>bLog</dt>
+	<dd>If set to true it will log the items removed from the game. This is a debug setting and is not recuired to be enabled.</dd>
+	<dt>Re</dt>
+	<dd>This is a list with classes to be removed. Virtually you can ad as much entries as you want.
+	<dl>
+		<dt>From, To</dt>
+		<dd>This is the fully qualified name of the class to be removed, for example the fully qualified name of Assault rifle is: <code>xWeapons.AssaultRiflePickup</code>. If the ClassName is invalid it will be reported in the log.<br />at the bottom of this page is a small list with fully qualified names of some game elements.</dd>
+	</dl>
+	</dd>
+</dl>

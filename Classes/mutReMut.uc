@@ -4,7 +4,7 @@
 
 	Creation date: 06/08/2004 16:53
 	Copyright (c) 2004, Michiel "El Muerte" Hendriks
-	<!-- $Id: mutReMut.uc,v 1.1 2004/08/06 17:59:51 elmuerte Exp $ -->
+	<!-- $Id: mutReMut.uc,v 1.2 2004/08/08 09:33:00 elmuerte Exp $ -->
 *******************************************************************************/
 
 class mutReMut extends Mutator config;
@@ -14,6 +14,8 @@ struct ReStruct
 {
 	var class<Actor> From;
 	var class<Actor> To;
+	var bool bRecurse;
+	var bool bSafeCheck;
 };
 var array<ReStruct> ReC;
 
@@ -22,6 +24,8 @@ struct ConStruct
 {
 	var string From;
 	var string To;
+	var bool bRecurse; //TODO: implement this feature
+	var bool bSafeCheck; //TODO: implement this feature
 };
 /** replacement configuration */
 var() config array<ConStruct> Re;
@@ -68,9 +72,12 @@ event PreBeginPlay()
 function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 {
 	local int i;
+	local bool bReplace;
 	for (i = 0; i < ReC.Length; i++)
 	{
-		if (Other.Class == ReC[i].From)
+		bReplace = (Other.Class == ReC[i].From);
+
+		if (bReplace && (!ReC[i].bSafeCheck || class'mutNoMut'.static.IsSafe(Level, Other)))
 		{
 			if (bLog) log("Replaced"@Other.Class@"@"@Other.Location@"with"@Rec[i].To, name);
 			ReplaceWith( Other, string(Rec[i].To));

@@ -4,7 +4,7 @@
 
 	Creation date: 06/08/2004 16:53
 	Copyright (c) 2004, Michiel "El Muerte" Hendriks
-	<!-- $Id: mutNoMut.uc,v 1.2 2004/08/06 17:59:51 elmuerte Exp $ -->
+	<!-- $Id: mutNoMut.uc,v 1.3 2004/08/08 09:33:00 elmuerte Exp $ -->
 *******************************************************************************/
 
 class mutNoMut extends Mutator config;
@@ -14,6 +14,7 @@ struct NoStruct
 {
 	var class<Actor> ClassType;
 	var bool bRecurse;
+	var bool bSafeCheck;
 };
 var array<NoStruct> NoC;
 
@@ -24,6 +25,8 @@ struct NoConfigStruct
 	var string ClassName;
 	/** if true also remove subclasses */
 	var bool bRecurse;
+	/** check if the class is safe to replace, e.g. not required for the game */
+	var bool bSafeCheck;
 };
 /** configuration array, to reset the configuration to an empty list simply use "No=" */
 var config array<NoConfigStruct> No;
@@ -55,6 +58,7 @@ event PreBeginPlay()
 				NoC.length = NoC.length+1;
 				NoC[NoC.length-1].ClassType = A;
 				NoC[NoC.length-1].bRecurse = No[i].bRecurse;
+				NoC[NoC.length-1].bSafeCheck = No[i].bSafeCheck;
 			}
 		}
 		else {
@@ -71,13 +75,24 @@ function bool CheckReplacement(Actor Other, out byte bSuperRelevant)
 	{
 		if (NoC[i].bRecurse) bRemove = Other.IsA(NoC[i].ClassType.name);
 		else bRemove = (Other.Class == NoC[i].ClassType);
-		if (bRemove)
+		if (bRemove && (!NoC[i].bSafeCheck || IsSafe(Level, Other)))
 		{
 			if (bLog) log("Removed"@Other.Class@"@"@Other.Location, name);
 			bSuperRelevant = 1;
 			return false;
 		}
 	}
+	return true;
+}
+
+/**
+	returns true when it's safe to remove the actor.
+*/
+static function bool IsSafe(LevelInfo Level, Actor Other)
+{
+	if (Vehicle(Other) != none) return !Vehicle(Other).bKeyVehicle;
+	if (Controller(Other) != none && TeamGame(Level.Game) != none) return !TeamGame(Level.Game).CriticalPlayer(Controller(Other));
+	if (Weapon(Other) != none) return Weapon(Other).bCanThrow;
 	return true;
 }
 
