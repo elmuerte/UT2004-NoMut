@@ -4,7 +4,7 @@
 
 	Creation date: 06/08/2004 16:53
 	Copyright (c) 2004, Michiel "El Muerte" Hendriks
-	<!-- $Id: mutNoMut.uc,v 1.1 2004/08/06 16:59:20 elmuerte Exp $ -->
+	<!-- $Id: mutNoMut.uc,v 1.2 2004/08/06 17:59:51 elmuerte Exp $ -->
 *******************************************************************************/
 
 class mutNoMut extends Mutator config;
@@ -94,7 +94,7 @@ function GetServerDetails( out GameInfo.ServerResponseLine ServerState )
 	}
 	i = ServerState.ServerInfo.Length;
 	ServerState.ServerInfo.Length = i+1;
-	ServerState.ServerInfo[i].Key = "NoMuT Removes";
+	ServerState.ServerInfo[i].Key = "NoMut Removes";
 	ServerState.ServerInfo[i].Value = s;
 }
 
