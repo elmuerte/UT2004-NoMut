@@ -118,12 +118,12 @@ YOU WILL ASSUME ALL COSTS FOR REQUIRED REPAIR OR CORRECTION.
 <ul>
 	<li>Pickup bases, weapon lockers and vehicles factories will now be checked and updated/removed when needed. This will have a more polished result.</li>
 	<li>(NoMut only) Non removable actors (bNoDelete = true or bStatic = true) will now simply be hidden.</li>
+	<li>Fixed the bRecurse option for ReMut, it didn't work at all</li>
 </ul>
 
 <a name="mutNoMut"></a>
 <h2>NoMut</h2>
 This mutator can remove certain elements from the level. You can remove things like pickups, vehicles, pretty much everything. <br />
-<i>Technical:</i> every <code>Actor</code> with properties <code>bNoDelete=false</code> and <code>bStatic=false</code> can be removed from the game.
 
 <h3>Installation</h3>
 The mutator name is:<br />
@@ -224,6 +224,7 @@ No=(ClassName="<i>Package.Class</i>")
 This mutator can replace certain elements in the level. You can replace things pretty much anything for anything else, e.g. replace a vehicle for a weapon. 
 This mutator is pretty much identical to the Arena mutators, except this gives you a more advanced method to configure.<br />
 <i>Technical:</i> every <code>Actor</code> with properties <code>bNoDelete=false</code> and <code>bStatic=false</code> can be replaced.
+<i>Notice:</i> Replacing actors is more difficult than simply removing them. For example, if you replace a weapon you also need to replace the weaponpickup and the weapon's ammo class. So when you replace actors do some research in other items that also might need to be replaced. ReMut will not do this automatically for your (because sometimes you want a complete different behavior).
 
 <h3>Installation</h3>
 The mutator name is:<br />

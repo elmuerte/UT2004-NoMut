@@ -4,7 +4,7 @@
 
 	Creation date: 06/08/2004 16:53
 	Copyright (c) 2004, Michiel "El Muerte" Hendriks
-	<!-- $Id: mutNoMut.uc,v 1.6 2004/08/12 09:41:15 elmuerte Exp $ -->
+	<!-- $Id: mutNoMut.uc,v 1.7 2004/08/12 19:49:12 elmuerte Exp $ -->
 *******************************************************************************/
 
 class mutNoMut extends Mutator config;
@@ -232,7 +232,6 @@ function updateWildcardBase(WildcardBase wbase)
 	local bool bUpdate;
 	local class<TournamentPickup> wc;
 
-	log("WildcardBase"@wbase.class@"@"@wbase.Location@":no pickups anymore", name);
 	for (n = ArrayCount(wbase.PickupClasses); n > 0; n--)
 	{
 		wc = wbase.PickupClasses[n];
@@ -255,7 +254,6 @@ function updateWildcardBase(WildcardBase wbase)
 			}
 			if (bUpdate)
 			{
-				log("Removed wildcard item:"@wbase.PickupClasses[n]);
 				wbase.PickupClasses[n] = none;
 				for (y = n+1; y < ArrayCount(wbase.PickupClasses)-1; y++)
 				{
