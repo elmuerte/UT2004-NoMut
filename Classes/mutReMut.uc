@@ -4,7 +4,7 @@
 
 	Creation date: 06/08/2004 16:53
 	Copyright (c) 2004, Michiel "El Muerte" Hendriks
-	<!-- $Id: mutReMut.uc,v 1.5 2004/08/12 19:49:12 elmuerte Exp $ -->
+	<!-- $Id: mutReMut.uc,v 1.6 2004/08/12 20:01:29 elmuerte Exp $ -->
 *******************************************************************************/
 
 class mutReMut extends Mutator config;
@@ -184,7 +184,11 @@ function updateVehicleFactory(SVehicleFactory sbase)
 			{
 				// not a vehicle, remove it
 				sbase.bHidden = true;
-				if (ONSVehicleFactory(sbase) != none) ONSVehicleFactory(sbase).bActive = false;
+				if (ONSVehicleFactory(sbase) != none)
+				{
+					ONSVehicleFactory(sbase).bActive = false;
+					ONSVehicleFactory(sbase).bNeverActivate = true; // to remove the initial effect
+				}
 				if (ASVehicleFactory(sbase) != none)
 				{
 					if (ReC[i].bSafeCheck) ASVehicleFactory(sbase).bEnabled = !ASVehicleFactory(sbase).bKeyVehicle;
